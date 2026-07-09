@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Ad Remover</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <span class="logo" aria-hidden="true">▶</span>
+      <h1>YouTube Ad Remover</h1>
+    </header>
+
+    <section class="toggle-row">
+      <div class="toggle-label">
+        <span class="status" id="status-text">Blocking ads</span>
+        <span class="status-sub" id="status-sub">Ads are being removed</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle" checked />
+        <span class="slider"></span>
+      </label>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <span class="stat-value" id="session-count">0</span>
+        <span class="stat-label">this session</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="lifetime-count">0</span>
+        <span class="stat-label">all time</span>
+      </div>
+    </section>
+
+    <footer class="footer">Ads skipped on YouTube</footer>
+
+    <script type="module" src="./popup.ts"></script>
+  </body>
+</html>

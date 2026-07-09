@@ -1,0 +1,31 @@
+/*
+ * Cosmetic ad hiding. Injected on every YouTube page.
+ *
+ * This hides static, feed, overlay, and companion ads instantly (before the
+ * JS sweep runs), which prevents ad layout flashes. Video ads are handled by
+ * ad-skipper.ts, not here.
+ *
+ * NOTE: These rules apply regardless of the on/off toggle because content_scripts
+ * CSS can't be conditionally removed. The visual impact when "off" is negligible
+ * (only ad boxes are hidden). If you want the toggle to also restore banner ads,
+ * move these into a runtime-injected <style> gated by the enabled flag.
+ */
+
+ytd-companion-slot-renderer,
+ytd-action-companion-ad-renderer,
+ytd-display-ad-renderer,
+ytd-promoted-video-renderer,
+ytd-promoted-sparkles-web-renderer,
+ytd-ad-slot-renderer,
+ytd-in-feed-ad-layout-renderer,
+ytd-banner-promo-renderer,
+ytd-statement-banner-renderer,
+#masthead-ad,
+.ytp-ad-overlay-slot,
+.ytp-ad-overlay-container,
+.ytp-ad-image-overlay,
+.ytd-search-pyv-renderer,
+ytd-in-feed-ad-layout-renderer,
+#player-ads {
+  display: none !important;
+}

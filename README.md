@@ -1,22 +1,21 @@
-# YouTube Ad Remover
+# Browser & YouTube Ad Blocker
 
-A Chrome (Manifest V3) extension that removes ads while watching YouTube, with a
-simple on/off toggle and an ads-blocked counter.
+A Chrome (Manifest V3) extension that blocks advertisements, banners, and tracking networks across all websites, while also fast-forwarding and skipping YouTube video ads.
 
 ## How it works
 
-YouTube serves video ads inline (same domain, increasingly server-side-inserted),
-so network-blocking alone can't stop them. The reliable technique — used here — is
-a **content script** that:
+The extension operates with a hybrid two-layer architecture:
 
+### 1. Universal Web Ad Blocking (All Websites)
+- **Network Request Blocking:** Uses Chrome's `declarativeNetRequest` engine (`rules/ad-domains.json`) to block major advertising and tracking networks (DoubleClick, Google AdSense, Outbrain, Taboola, Criteo, PopAds, Amazon Ads, etc.) directly at the browser network layer without performance penalties.
+- **Cosmetic Hiding:** Injects a lightweight stylesheet (`src/content/generic-cosmetic.css`) across all pages (`<all_urls>`) at `document_start` to collapse empty ad frames, sponsored placeholders, and blank ad boxes.
+
+### 2. Specialized YouTube Video Ad Skipper
+YouTube serves video ads inline (often server-side-inserted), meaning network blocking alone is insufficient. The specialized YouTube content script:
 1. Watches the player for the `ad-showing` / `ad-interrupting` class.
-2. Fast-forwards the ad to its end (`video.currentTime = video.duration`) and
-   clicks any "Skip" button.
-3. Removes banner / overlay / companion ad elements.
-4. Dismisses the "Ad blockers are not allowed on YouTube" popup and resumes play.
-
-A small `declarativeNetRequest` ruleset (`rules/ad-domains.json`) blocks known
-ad/tracker endpoints as a secondary, best-effort layer.
+2. Fast-forwards video ads instantly to the end (`video.currentTime = video.duration`) and clicks "Skip".
+3. Removes banner / overlay / companion elements from the YouTube layout.
+4. Dismisses YouTube's anti-adblock enforcement dialogs automatically.
 
 ## Develop
 

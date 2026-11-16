@@ -1,0 +1,62 @@
+/* ==========================================================================
+   Universal Ad Blocking & Cosmetic Hiding Stylesheet
+   Applies across all websites to hide blocked ad frames, sponsored placeholders,
+   banner slots, and tracking embeds.
+   ========================================================================== */
+
+/* Google AdSense / DoubleClick / Ad Manager slots */
+ins.adsbygoogle,
+[id^="google_ads_iframe"],
+[id^="div-gpt-ad"],
+div[data-google-query-id],
+iframe[src*="googlesyndication.com"],
+iframe[src*="doubleclick.net"],
+iframe[id^="google_ads_frame"],
+
+/* Common advertising classes and IDs */
+.ad-banner,
+.ad-container,
+.ad-placeholder,
+.ad-wrapper,
+.ad_unit,
+.ads-holder,
+.ad-slot,
+.adzone,
+.sponsored-post,
+.sponsored-content,
+.sponsored-label,
+.native-ad,
+.commercial-unit,
+
+/* Major ad network widgets & wrappers */
+[id*="ScriptRoot"],
+[class*="outbrain"],
+[id*="outbrain"],
+[class*="taboola"],
+[id*="taboola"],
+[data-ad-unit],
+[data-ad-client],
+[data-ad-slot],
+[data-adzone],
+[data-dmp-unit],
+
+/* Video and social media in-stream ad frames */
+.video-ad-container,
+.vjs-ad-playing,
+iframe[src*="adnxs.com"],
+iframe[src*="criteo.com"],
+iframe[src*="rubiconproject.com"],
+iframe[src*="casalemedia.com"],
+iframe[src*="smartadserver.com"] {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}

@@ -2,14 +2,16 @@ import { defineManifest } from '@crxjs/vite-plugin';
 import pkg from './package.json';
 
 /**
- * MV3 manifest. Chrome-only for v1 (ports to Edge/Brave with no code change).
+ * MV3 manifest for Browser & YouTube Ad Blocker.
  *
- * The content script is injected at document_start so the ad engine is running
- * before YouTube's player initializes. `all_frames` covers embedded players.
+ * Combines:
+ *  1. Browser-wide network blocking via declarativeNetRequest
+ *  2. Universal cosmetic CSS injection across all websites (<all_urls>)
+ *  3. Specialized YouTube video ad fast-forward & anti-adblock dismissal
  */
 export default defineManifest({
   manifest_version: 3,
-  name: 'YouTube Ad Remover',
+  name: 'Browser & YouTube Ad Blocker',
   version: pkg.version,
   description: pkg.description,
   icons: {
@@ -30,6 +32,14 @@ export default defineManifest({
     type: 'module',
   },
   content_scripts: [
+    // 1. Universal cosmetic hiding for all websites
+    {
+      matches: ['<all_urls>'],
+      css: ['src/content/generic-cosmetic.css'],
+      run_at: 'document_start',
+      all_frames: true,
+    },
+    // 2. Specialized YouTube video player skipper & anti-adblock handler
     {
       matches: ['*://*.youtube.com/*'],
       js: ['src/content/index.ts'],
@@ -39,7 +49,7 @@ export default defineManifest({
     },
   ],
   permissions: ['storage', 'declarativeNetRequest'],
-  host_permissions: ['*://*.youtube.com/*'],
+  host_permissions: ['<all_urls>'],
   declarative_net_request: {
     rule_resources: [
       {

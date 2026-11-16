@@ -1,7 +1,7 @@
 {
   "name": "youtube-ad-remover",
   "version": "1.0.0",
-  "description": "A Chrome extension that removes ads while watching YouTube, with a simple on/off toggle and an ads-blocked counter.",
+  "description": "A Chrome extension that blocks web ads, trackers, and banners across all websites while skipping YouTube video ads.",
   "type": "module",
   "scripts": {
     "dev": "vite",

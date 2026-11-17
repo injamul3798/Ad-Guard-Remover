@@ -21,27 +21,52 @@ export const DEFAULT_SETTINGS: Settings = {
 
 const STORAGE_KEYS = ['enabled', 'lifetimeCount'] as const;
 
+/** Returns false when the extension has been reloaded and this content script's context is stale. */
+function isContextValid(): boolean {
+  try {
+    return !!chrome.runtime?.id;
+  } catch {
+    return false;
+  }
+}
+
 /** Read the full settings object, filling in defaults for anything unset. */
 export async function getSettings(): Promise<Settings> {
-  const stored = await chrome.storage.local.get(STORAGE_KEYS as unknown as string[]);
-  return {
-    enabled: stored.enabled ?? DEFAULT_SETTINGS.enabled,
-    lifetimeCount: stored.lifetimeCount ?? DEFAULT_SETTINGS.lifetimeCount,
-  };
+  try {
+    if (!isContextValid()) return { ...DEFAULT_SETTINGS };
+    const stored = await chrome.storage.local.get(STORAGE_KEYS as unknown as string[]);
+    return {
+      enabled: stored.enabled ?? DEFAULT_SETTINGS.enabled,
+      lifetimeCount: stored.lifetimeCount ?? DEFAULT_SETTINGS.lifetimeCount,
+    };
+  } catch {
+    return { ...DEFAULT_SETTINGS };
+  }
 }
 
 /** Read only the enabled flag (hot path for the content script). */
 export async function getEnabled(): Promise<boolean> {
-  const { enabled } = await chrome.storage.local.get('enabled');
-  return enabled ?? DEFAULT_SETTINGS.enabled;
+  try {
+    if (!isContextValid()) return DEFAULT_SETTINGS.enabled;
+    const { enabled } = await chrome.storage.local.get('enabled');
+    return enabled ?? DEFAULT_SETTINGS.enabled;
+  } catch {
+    return DEFAULT_SETTINGS.enabled;
+  }
 }
 
 export async function setEnabled(enabled: boolean): Promise<void> {
-  await chrome.storage.local.set({ enabled });
+  try {
+    if (!isContextValid()) return;
+    await chrome.storage.local.set({ enabled });
+  } catch {}
 }
 
 export async function setLifetimeCount(lifetimeCount: number): Promise<void> {
-  await chrome.storage.local.set({ lifetimeCount });
+  try {
+    if (!isContextValid()) return;
+    await chrome.storage.local.set({ lifetimeCount });
+  } catch {}
 }
 
 /**
@@ -57,8 +82,14 @@ export function onEnabledChanged(cb: (enabled: boolean) => void): () => void {
       cb(changes.enabled.newValue ?? DEFAULT_SETTINGS.enabled);
     }
   };
-  chrome.storage.onChanged.addListener(listener);
-  return () => chrome.storage.onChanged.removeListener(listener);
+  try {
+    if (isContextValid()) chrome.storage.onChanged.addListener(listener);
+  } catch {}
+  return () => {
+    try {
+      chrome.storage.onChanged.removeListener(listener);
+    } catch {}
+  };
 }
 
 /* ------------------------------------------------------------------ *

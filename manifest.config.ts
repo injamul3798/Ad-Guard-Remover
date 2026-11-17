@@ -40,9 +40,10 @@ export default defineManifest({
       all_frames: true,
     },
     // 2. Specialized YouTube video player skipper & anti-adblock handler
+    // JS is built separately as IIFE (see vite.content.config.ts) to avoid
+    // @crxjs's dynamic-import loader, which YouTube's CSP blocks.
     {
       matches: ['*://*.youtube.com/*'],
-      js: ['src/content/index.ts'],
       css: ['src/content/cosmetic.css'],
       run_at: 'document_start',
       all_frames: true,
